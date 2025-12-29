@@ -3,8 +3,8 @@ node_modules/
 frontend/node_modules/
 
 # Build outputs
-dist/
-public/
+/dist/
+/public/
 frontend/dist/
 docs/.vitepress/dist/
 docs/.vitepress/cache/
@@ -13,8 +13,8 @@ docs/.vitepress/cache/
 !docs/public/
 
 # Data
-data/
-logs/
+/data/
+/logs/
 
 # IDE
 .vscode/
