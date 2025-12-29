@@ -66,6 +66,25 @@ npm run pm2:logs
 
 访问 `http://localhost:3000` 进入管理界面。
 
+### Docker 运行
+
+```bash
+# 构建镜像
+docker build -f docker/Dockerfile -t goofishcbot:local .
+
+# 运行本地构建的镜像（建议挂载 data/logs 以持久化）
+docker run --rm -p 3000:3000 \
+  -v $(pwd)/data:/app/data \
+  -v $(pwd)/logs:/app/logs \
+  goofishcbot:local
+
+# 或：运行 Docker Hub 上的镜像（把 <username> 替换成你的 Docker Hub 用户名）
+docker run --rm -p 3000:3000 \
+  -v $(pwd)/data:/app/data \
+  -v $(pwd)/logs:/app/logs \
+  <username>/goofishcbot:latest
+```
+
 ## 📖 文档
 
 详细文档请访问：[https://haiyewei.github.io/GoofishCredentialsBot](https://haiyewei.github.io/GoofishCredentialsBot)

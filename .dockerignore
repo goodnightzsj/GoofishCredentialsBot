@@ -1,0 +1,32 @@
+# Dependencies
+node_modules
+frontend/node_modules
+
+# Build outputs
+dist
+public
+frontend/dist
+docs/.vitepress/dist
+docs/.vitepress/cache
+
+# Runtime data
+data
+logs
+
+# VCS / IDE
+.git
+.github
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.log
+npm-debug.log*
+.env
+.env.*
+Plan.md
+.ReferenceProjects
