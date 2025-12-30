@@ -191,9 +191,10 @@ body {
 .textarea {
     @apply transition-all duration-200;
     border-radius: var(--radius-md);
-    background-color: oklch(var(--b2) / 1) !important;
-    /* Force solid background */
-    border-color: transparent;
+    background-color: oklch(var(--b1)) !important;
+    /* Force solid base background */
+    border: 1px solid oklch(var(--bc) / 0.2);
+    /* Add subtle border for definition */
 }
 
 .input:focus,

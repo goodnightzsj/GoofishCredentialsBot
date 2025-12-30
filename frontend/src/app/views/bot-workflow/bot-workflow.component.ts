@@ -489,8 +489,27 @@ export class BotWorkflowComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getTextColor(type: string): string {
-        // Bright colors that need black text for contrast
-        const brightTypes = ['delivery', 'notify', 'trigger']; /* Removed 'ship' (purple) */
-        return brightTypes.includes(type) ? '#000000' : '#ffffff';
+        const color = this.getNodeTypeColor(type);
+        return this.getContrastColor(color);
+    }
+
+    // Helper to calculate best text color (Black/White) based on background hex
+    getContrastColor(hexcolor: string): string {
+        // If invalid hex, default to white text (safe for dark fallbacks)
+        if (!hexcolor || !hexcolor.startsWith('#')) return '#ffffff';
+
+        // Remove hash
+        hexcolor = hexcolor.replace('#', '');
+
+        // Parse RGB
+        const r = parseInt(hexcolor.substr(0, 2), 16);
+        const g = parseInt(hexcolor.substr(2, 2), 16);
+        const b = parseInt(hexcolor.substr(4, 2), 16);
+
+        // Calculate YIQ brightness (standard formula)
+        const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
+        // If bright (>= 128), return black text. Else white.
+        return (yiq >= 128) ? '#000000' : '#ffffff';
     }
 }

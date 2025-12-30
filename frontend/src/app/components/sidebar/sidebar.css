@@ -81,11 +81,13 @@
 }
 
 .sidebar-menu-item.active {
-    background-color: oklch(var(--p) / 0.15);
-    color: oklch(var(--p));
-    border-right: 3px solid oklch(var(--p));
-    border-radius: 0.5rem 0 0 0.5rem;
-    /* Only round left side */
+    background-color: oklch(var(--p) / 0.15) !important;
+    color: oklch(var(--p)) !important;
+    border-left: 4px solid oklch(var(--p));
+    /* Left border is standard */
+    border-right: none;
+    border-radius: 0 0.5rem 0.5rem 0;
+    /* Round right side */
 }
 
 .sidebar-menu-item.active .sidebar-menu-icon svg {
