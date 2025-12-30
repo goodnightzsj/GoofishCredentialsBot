@@ -81,8 +81,11 @@
 }
 
 .sidebar-menu-item.active {
-    background-color: oklch(var(--p) / 0.1);
+    background-color: oklch(var(--p) / 0.15);
     color: oklch(var(--p));
+    border-right: 3px solid oklch(var(--p));
+    border-radius: 0.5rem 0 0 0.5rem;
+    /* Only round left side */
 }
 
 .sidebar-menu-item.active .sidebar-menu-icon svg {

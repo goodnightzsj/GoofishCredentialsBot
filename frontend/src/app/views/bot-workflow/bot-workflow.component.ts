@@ -146,7 +146,7 @@ export class BotWorkflowComponent implements OnInit, AfterViewInit, OnDestroy {
             nodeType: config.nodeType,
             fillColor: typeConfig?.color,
             borderColor: typeConfig?.color,
-            fontColor: '#ffffff',
+            fontColor: this.getTextColor(config.nodeType),
             config: {
                 deliveryMode: config.deliveryMode,
                 deliveryContent: config.deliveryContent,
@@ -263,7 +263,7 @@ export class BotWorkflowComponent implements OnInit, AfterViewInit, OnDestroy {
             nodeType: type,
             fillColor: typeConfig.color,
             borderColor: typeConfig.color,
-            fontColor: '#ffffff',
+            fontColor: this.getTextColor(type),
             config: {}
         });
     }
@@ -286,7 +286,7 @@ export class BotWorkflowComponent implements OnInit, AfterViewInit, OnDestroy {
             nodeType: type,
             fillColor: typeConfig.color,
             borderColor: typeConfig.color,
-            fontColor: '#ffffff',
+            fontColor: this.getTextColor(type),
             config: {}
         });
     }
@@ -303,7 +303,7 @@ export class BotWorkflowComponent implements OnInit, AfterViewInit, OnDestroy {
             nodeType: 'condition',
             fillColor: NODE_TYPES.condition.color,
             borderColor: NODE_TYPES.condition.color,
-            fontColor: '#ffffff',
+            fontColor: this.getTextColor('condition'),
             config: { expression: '' }
         });
 
@@ -316,7 +316,7 @@ export class BotWorkflowComponent implements OnInit, AfterViewInit, OnDestroy {
             setTimeout(() => {
                 this.mindMap.execCommand('INSERT_CHILD_NODE', false, [], {
                     text: 'IF: 条件成立', uid: `if_${ts}`, nodeType: 'condition',
-                    fillColor: '#22c55e', borderColor: '#22c55e', fontColor: '#ffffff',
+                    fillColor: '#22c55e', borderColor: '#22c55e', fontColor: this.getTextColor('trigger'), /* Use trigger (green) color logic */
                     config: { branch: 'if' }
                 });
                 setTimeout(() => {
@@ -486,5 +486,11 @@ export class BotWorkflowComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getNodeTypeColor(type: string): string {
         return NODE_TYPES[type as keyof typeof NODE_TYPES]?.color || '#6b7280';
+    }
+
+    getTextColor(type: string): string {
+        // Bright colors that need black text for contrast
+        const brightTypes = ['delivery', 'ship', 'notify', 'trigger'];
+        return brightTypes.includes(type) ? '#000000' : '#ffffff';
     }
 }
