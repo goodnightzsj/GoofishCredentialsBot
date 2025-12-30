@@ -5,6 +5,34 @@ const logsDir = path.join(process.cwd(), 'logs')
 
 export type LogLevel = 'DEBUG' | 'INFO' | 'WARN' | 'ERROR'
 
+// 敏感信息屏蔽正则
+const SENSITIVE_PATTERNS = [
+    /(token=)([^&"'\s]+)/gi,
+    /(authorization:\s*)(Bearer\s+)?([^\s]+)/gi,
+    /(cookie:\s*)([^"'\n]+)/gi,
+    /(set-cookie:\s*)([^"'\n]+)/gi,
+    /("?token"?:?\s*"?)([^"'\s,}]+)("?)/gi,
+    /("?cookies?"?:?\s*"?)([^"'\n,}]+)("?)/gi
+]
+
+function maskSensitiveData(msg: string): string {
+    let masked = msg
+    for (const pattern of SENSITIVE_PATTERNS) {
+        masked = masked.replace(pattern, (match, prefix, val1, val2) => {
+            // 处理不同的正则捕获组
+            if (val2 && pattern.source.includes('Bearer')) { // Authorization case
+                return `${prefix}${val1}******`
+            }
+            if (val2) { // Generic case for simple key-value pairs where value is captured
+                return `${prefix}${val1}******${val2}`
+            }
+            // Simple key=value case
+            return `${prefix}******`
+        })
+    }
+    return masked
+}
+
 const levelPriority: Record<LogLevel, number> = {
     DEBUG: 0, INFO: 1, WARN: 2, ERROR: 3
 }
@@ -81,7 +109,8 @@ export function log(level: LogLevel, module: string, message: string) {
     if (levelPriority[level] < levelPriority[currentLevel]) return
 
     const time = formatTime()
-    const logLine = `${time} | ${level.padEnd(5)} | ${module.padEnd(12)} | ${message}`
+    const maskedMessage = maskSensitiveData(message)
+    const logLine = `${time} | ${level.padEnd(5)} | ${module.padEnd(12)} | ${maskedMessage}`
 
     const colors: Record<LogLevel, string> = {
         DEBUG: '\x1b[90m', INFO: '\x1b[36m', WARN: '\x1b[33m', ERROR: '\x1b[31m'

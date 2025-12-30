@@ -59,7 +59,8 @@ export function createAdminAuthMiddleware() {
             return c.json({ error: 'Server not configured' }, 503)
         }
 
-        const token = getTokenFromAuthorizationHeader(c) || getTokenFromQuery(c)
+        const token = getTokenFromAuthorizationHeader(c) ||
+            (c.req.path.startsWith('/ws') ? getTokenFromQuery(c) : null)
         if (!token) {
             return c.json({ error: 'Unauthorized' }, 401)
         }

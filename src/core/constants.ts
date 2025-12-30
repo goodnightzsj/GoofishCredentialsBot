@@ -72,7 +72,8 @@ export const LOG_CONFIG = {
 
 // 环境配置
 export const ENV = {
-    IS_DEV: process.env.NODE_ENV !== 'production'
+    IS_DEV: process.env.NODE_ENV !== 'production',
+    ENCRYPTION_KEY: process.env.ENCRYPTION_KEY
 }
 
 // API 服务器配置

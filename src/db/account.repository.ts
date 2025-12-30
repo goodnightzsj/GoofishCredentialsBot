@@ -5,6 +5,7 @@
 import { db } from './connection.js'
 import { createLogger } from '../core/logger.js'
 import { nowLocalString } from '../utils/date.js'
+import { encrypt, decrypt } from '../utils/encryption.js'
 import { emitAccountsUpdated } from '../core/event-emitter.js'
 import type {
     Account,
@@ -22,7 +23,8 @@ export function getEnabledAccounts(): Account[] {
                created_at as createdAt, updated_at as updatedAt
         FROM accounts WHERE enabled = 1
     `)
-    return stmt.all() as Account[]
+    const accounts = stmt.all() as Account[]
+    return accounts.map(acc => ({ ...acc, cookies: decrypt(acc.cookies) }))
 }
 
 // 获取所有账号
@@ -32,7 +34,8 @@ export function getAllAccounts(): Account[] {
                created_at as createdAt, updated_at as updatedAt
         FROM accounts
     `)
-    return stmt.all() as Account[]
+    const accounts = stmt.all() as Account[]
+    return accounts.map(acc => ({ ...acc, cookies: decrypt(acc.cookies) }))
 }
 
 // 获取单个账号
@@ -42,7 +45,11 @@ export function getAccount(id: string): Account | null {
                created_at as createdAt, updated_at as updatedAt
         FROM accounts WHERE id = ?
     `)
-    return stmt.get(id) as Account | null
+    const account = stmt.get(id) as Account | null
+    if (account) {
+        account.cookies = decrypt(account.cookies)
+    }
+    return account
 }
 
 // 添加或更新账号
@@ -63,7 +70,7 @@ export function upsertAccount(account: UpsertAccountParams): boolean {
         `)
         stmt.run(
             account.id,
-            account.cookies,
+            encrypt(account.cookies),
             account.userId || null,
             account.nickname || null,
             account.avatar || null,
@@ -104,7 +111,7 @@ export function updateAccountCookies(id: string, cookies: string): boolean {
         const stmt = db.prepare(`
             UPDATE accounts SET cookies = ?, updated_at = ? WHERE id = ?
         `)
-        stmt.run(cookies, now, id)
+        stmt.run(encrypt(cookies), now, id)
         logger.info(`账号 cookies 已更新: ${id}`)
         emitAccountsUpdated()
         return true

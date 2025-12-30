@@ -78,6 +78,7 @@ docker build -f docker/Dockerfile -t goofishcbot:local .
 # 运行本地构建的镜像（建议挂载 data/logs 以持久化）
 docker run --rm -p 127.0.0.1:3000:3000 \
   -e ADMIN_TOKEN="your-strong-token" \
+  -e ENCRYPTION_KEY="your-encryption-key-min-32-chars" \
   -v $(pwd)/data:/app/data \
   -v $(pwd)/logs:/app/logs \
   goofishcbot:local
@@ -85,6 +86,7 @@ docker run --rm -p 127.0.0.1:3000:3000 \
 # 或：运行 Docker Hub 上的镜像（把 <username> 替换成你的 Docker Hub 用户名）
 docker run --rm -p 127.0.0.1:3000:3000 \
   -e ADMIN_TOKEN="your-strong-token" \
+  -e ENCRYPTION_KEY="your-encryption-key-min-32-chars" \
   -v $(pwd)/data:/app/data \
   -v $(pwd)/logs:/app/logs \
   <username>/goofishcbot:latest
