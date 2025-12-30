@@ -10,21 +10,34 @@
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
     --font-mono: 'Fira Code', monospace;
 
-    /* 圆角 - 更加圆润 */
+    /* 圆角 */
     --radius-sm: 0.5rem;
     --radius-md: 0.75rem;
     --radius-lg: 1rem;
     --radius-xl: 1.5rem;
 
-    /* 阴影 - 更柔和的扩散阴影 */
-    --shadow-sm: 0 2px 4px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
-    --shadow-glow: 0 0 15px rgba(var(--primary) / 0.3);
+    /* 默认(浅色)模式 - 科技感清透风格 */
+    --glass-bg: rgba(255, 255, 255, 0.75);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.6);
+    --glass-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.02),
+        0 10px 15px -3px rgba(0, 0, 0, 0.04),
+        0 0 0 1px rgba(0, 0, 0, 0.02);
+    /* 内描边增强层次 */
 
     /* 间距 */
     --spacing-page: 1.5rem;
     --gap-grid: 1.5rem;
+}
+
+/* 深色模式覆盖 - 赛博/科技暗黑风格 */
+[data-theme='dark'] {
+    --glass-bg: rgba(30, 30, 40, 0.65);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.12);
+    --glass-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+    /* 顶部高光 */
 }
 
 body {
@@ -43,24 +56,32 @@ body {
    实用工具类 - Utilities
    ======================================== */
 
-/* 毛玻璃效果 */
+/* 毛玻璃效果 - 基础定义 */
 .glass-effect {
-    background: oklch(var(--b1) / 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid oklch(var(--bc) / 0.05);
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: var(--glass-border);
+    box-shadow: var(--glass-shadow);
 }
 
 .glass-card {
-    background: oklch(var(--b1) / 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid oklch(var(--bc) / 0.15);
-    @apply shadow-md rounded-2xl transition-all duration-300;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    @apply rounded-2xl transition-all duration-300;
 }
 
 .glass-card:hover {
-    @apply shadow-lg -translate-y-1 border-primary/20;
+    transform: translateY(-2px);
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.05),
+        0 8px 10px -6px rgba(0, 0, 0, 0.05),
+        var(--glass-shadow);
+    /* 叠加基础阴影 */
+    border-color: oklch(var(--p) / 0.3);
 }
 
 /* 动画 */
@@ -133,12 +154,12 @@ body {
    ======================================== */
 
 .card {
-    background: oklch(var(--b1) / 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid oklch(var(--bc) / 0.15);
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: var(--glass-border);
+    box-shadow: var(--glass-shadow);
     /* Equivalent to glass-effect */
-    @apply border-none;
     /* DaisyUI card default override */
     border-radius: var(--radius-lg);
 }
