@@ -202,7 +202,8 @@ body {
 
 /* 页面容器 */
 .page-container {
-    @apply container mx-auto p-4 md:p-6 lg:p-8 animate-fade-in;
+    @apply container mx-auto p-4 md:p-6 lg:p-8;
+    animation: fade-in 0.4s ease-out forwards;
     max-width: 1400px;
 }
 
