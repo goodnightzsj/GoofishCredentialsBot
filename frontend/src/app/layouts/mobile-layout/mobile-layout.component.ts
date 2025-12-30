@@ -1,8 +1,9 @@
-import { Component, ChangeDetectionStrategy, signal, input, output, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, input, output, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 
 import { ICONS } from '../../shared/icons';
+import { ThemeService, type ThemeMode } from '../../core/services';
 import type { ViewType } from '../../components/sidebar/sidebar.component';
 
 @Component({
@@ -14,6 +15,7 @@ import type { ViewType } from '../../components/sidebar/sidebar.component';
 })
 export class MobileLayoutComponent {
     protected readonly icons = ICONS;
+    readonly themeService = inject(ThemeService);
 
     currentView = input.required<ViewType>();
     activeCount = input<number>(0);
@@ -50,5 +52,9 @@ export class MobileLayoutComponent {
     setView(view: ViewType) {
         this.viewChange.emit(view);
         this.closeDrawer();
+    }
+
+    setTheme(mode: ThemeMode) {
+        this.themeService.setTheme(mode);
     }
 }

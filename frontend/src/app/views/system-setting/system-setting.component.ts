@@ -13,6 +13,7 @@ import { ThemeService, SettingsService, AuthService, type ThemeMode, type AISett
     styleUrl: './system-setting.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
+// Trigger build refresh
 export class SystemSettingComponent implements OnInit {
     readonly themeService = inject(ThemeService);
     readonly settingsService = inject(SettingsService);
@@ -65,10 +66,6 @@ export class SystemSettingComponent implements OnInit {
         } catch (e) {
             console.error('加载 AI 设置失败', e);
         }
-    }
-
-    setTheme(mode: ThemeMode) {
-        this.themeService.setTheme(mode);
     }
 
     updateAIField(field: keyof AISettings, value: string) {

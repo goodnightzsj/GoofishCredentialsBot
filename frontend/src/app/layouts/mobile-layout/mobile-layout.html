@@ -8,7 +8,31 @@
             <img src="/logo.svg" alt="Logo" class="w-5 h-5" />
             <span class="font-bold">GoofishCBot</span>
         </div>
-        <div class="flex items-center gap-3 text-sm">
+        
+        <!-- Theme Switcher -->
+        <div class="dropdown dropdown-end dropdown-bottom">
+            <div tabindex="0" role="button" class="btn btn-ghost btn-sm btn-circle" aria-label="Theme Switcher">
+                @switch (themeService.themeMode()) {
+                @case ('light') { <lucide-icon [img]="icons.Sun" class="w-4 h-4"></lucide-icon> }
+                @case ('dark') { <lucide-icon [img]="icons.Moon" class="w-4 h-4"></lucide-icon> }
+                @default { <lucide-icon [img]="icons.Monitor" class="w-4 h-4"></lucide-icon> }
+                }
+            </div>
+            <ul tabindex="0"
+                class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-32 border border-base-200 mt-2">
+                <li><a (click)="setTheme('light')" [class.active]="themeService.themeMode() === 'light'">
+                        <lucide-icon [img]="icons.Sun" class="w-4 h-4"></lucide-icon> 浅色
+                    </a></li>
+                <li><a (click)="setTheme('dark')" [class.active]="themeService.themeMode() === 'dark'">
+                        <lucide-icon [img]="icons.Moon" class="w-4 h-4"></lucide-icon> 深色
+                    </a></li>
+                <li><a (click)="setTheme('system')" [class.active]="themeService.themeMode() === 'system'">
+                        <lucide-icon [img]="icons.Monitor" class="w-4 h-4"></lucide-icon> 跟随系统
+                    </a></li>
+            </ul>
+        </div>
+
+        <div class="flex items-center gap-3 text-sm ml-2">
             <span class="flex items-center gap-1">
                 <lucide-icon [img]="icons.Wifi" class="w-4 h-4 text-success"></lucide-icon>
                 <span class="text-success">{{ activeCount() }}</span>

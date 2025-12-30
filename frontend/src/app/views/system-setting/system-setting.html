@@ -1,33 +1,9 @@
 <div class="page-container flex flex-col gap-6">
-    <div class="card bg-base-100 shadow-sm">
+    <!-- <div class="card bg-base-100 shadow-sm">
         <div class="card-body">
             <h2 class="card-title">系统设置</h2>
-
-            <!-- 主题设置 -->
-            <div class="form-control mt-4">
-                <label class="label">
-                    <span class="label-text font-medium">主题模式</span>
-                </label>
-                <div class="flex gap-2">
-                    <button class="btn btn-sm" [class.btn-primary]="themeService.themeMode() === 'light'"
-                        [class.btn-ghost]="themeService.themeMode() !== 'light'" (click)="setTheme('light')">
-                        <lucide-icon [img]="icons.Sun" class="w-4 h-4"></lucide-icon>
-                        浅色
-                    </button>
-                    <button class="btn btn-sm" [class.btn-primary]="themeService.themeMode() === 'dark'"
-                        [class.btn-ghost]="themeService.themeMode() !== 'dark'" (click)="setTheme('dark')">
-                        <lucide-icon [img]="icons.Moon" class="w-4 h-4"></lucide-icon>
-                        深色
-                    </button>
-                    <button class="btn btn-sm" [class.btn-primary]="themeService.themeMode() === 'system'"
-                        [class.btn-ghost]="themeService.themeMode() !== 'system'" (click)="setTheme('system')">
-                        <lucide-icon [img]="icons.Monitor" class="w-4 h-4"></lucide-icon>
-                        跟随系统
-                    </button>
-                </div>
-            </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- 安全设置 -->
     <div class="card bg-base-100 shadow-sm">
