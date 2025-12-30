@@ -6,204 +6,174 @@
    ======================================== */
 
 :root {
-    /* 圆角 */
-    --radius-sm: 0.375rem;
-    /* 6px */
-    --radius-md: 0.5rem;
-    /* 8px */
-    --radius-lg: 0.75rem;
-    /* 12px */
-    --radius-xl: 1rem;
-    /* 16px */
+    /* 字体栈 */
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'Fira Code', monospace;
 
-    /* 阴影 */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    /* 圆角 - 更加圆润 */
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+
+    /* 阴影 - 更柔和的扩散阴影 */
+    --shadow-sm: 0 2px 4px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+    --shadow-glow: 0 0 15px rgba(var(--primary) / 0.3);
 
     /* 间距 */
-    --spacing-page: 1rem;
-    --spacing-card: 1rem;
-    --spacing-section: 1.5rem;
-
-    /* 响应式断点对应的间距 */
-    --gap-grid: 1rem;
+    --spacing-page: 1.5rem;
+    --gap-grid: 1.5rem;
 }
 
-@media (min-width: 640px) {
-    :root {
-        --spacing-page: 1.5rem;
-        --spacing-card: 1.25rem;
-        --gap-grid: 1.25rem;
-    }
-}
-
-@media (min-width: 1024px) {
-    :root {
-        --spacing-page: 1.5rem;
-        --spacing-card: 1.5rem;
-        --gap-grid: 1.5rem;
-    }
+body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: oklch(var(--b1));
+    color: oklch(var(--bc));
+    background-image: 
+        radial-gradient(circle at 10% 20%, oklch(var(--p) / 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, oklch(var(--s) / 0.05) 0%, transparent 40%);
+    background-attachment: fixed;
 }
 
 /* ========================================
-   全局组件样式覆盖
+   实用工具类 - Utilities
    ======================================== */
 
-/* 统一卡片样式 */
-.card {
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
+/* 毛玻璃效果 */
+.glass-effect {
+    background: oklch(var(--b1) / 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid oklch(var(--bc) / 0.05);
 }
 
-.card-body {
-    padding: var(--spacing-card);
+.glass-card {
+    @apply glass-effect shadow-md rounded-2xl transition-all duration-300;
 }
 
-/* 统一按钮圆角 */
-.btn {
-    border-radius: var(--radius-md);
+.glass-card:hover {
+    @apply shadow-lg -translate-y-1 border-primary/20;
 }
 
-.btn-circle {
-    border-radius: 9999px;
+/* 动画 */
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* 统一输入框样式 */
-.input,
-.select,
-.textarea {
-    border-radius: var(--radius-md);
+@keyframes slide-in-left {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
-/* 统一徽章样式 */
-.badge {
-    border-radius: var(--radius-sm);
+.animate-fade-in {
+    animation: fade-in 0.4s ease-out forwards;
 }
 
-/* 统一头像样式 */
-.avatar>div {
-    border-radius: var(--radius-lg);
+.animate-slide-in {
+    animation: slide-in-left 0.4s ease-out forwards;
 }
 
-.avatar .rounded-full {
-    border-radius: 9999px;
-}
+.stagger-1 { animation-delay: 100ms; }
+.stagger-2 { animation-delay: 200ms; }
+.stagger-3 { animation-delay: 300ms; }
 
-/* 统一表格样式 */
-.table {
-    border-radius: var(--radius-lg);
-}
-
-/* 统一 alert 样式 */
-.alert {
-    border-radius: var(--radius-md);
-}
-
-/* 统一 toggle 样式 */
-.toggle {
-    border-radius: 9999px;
-}
-
-/* 统一 join 样式 */
-.join .btn:first-child {
-    border-top-left-radius: var(--radius-md);
-    border-bottom-left-radius: var(--radius-md);
-}
-
-.join .btn:last-child {
-    border-top-right-radius: var(--radius-md);
-    border-bottom-right-radius: var(--radius-md);
-}
-
-/* ========================================
-   页面容器样式
-   ======================================== */
-
-.page-container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-grid);
-}
-
-/* ========================================
-   响应式网格系统
-   ======================================== */
-
-.grid-responsive {
-    display: grid;
-    gap: var(--gap-grid);
-    grid-template-columns: 1fr;
-}
-
-@media (min-width: 640px) {
-    .grid-responsive-2 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .grid-responsive-3 {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (min-width: 1024px) {
-    .grid-responsive-4 {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-/* ========================================
-   工具类
-   ======================================== */
-
-/* 文本截断 */
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* 滚动容器 */
-.scroll-container {
-    max-height: 70vh;
-    overflow-y: auto;
-    scrollbar-width: thin;
-}
-
-.scroll-container::-webkit-scrollbar {
+/* 细滚动条 */
+::-webkit-scrollbar {
     width: 6px;
+    height: 6px;
 }
 
-.scroll-container::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
     background: transparent;
 }
 
-.scroll-container::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
+    background: oklch(var(--bc) / 0.1);
+    border-radius: 99px;
+    transition: background 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
     background: oklch(var(--bc) / 0.2);
-    border-radius: 3px;
 }
 
-.scroll-container::-webkit-scrollbar-thumb:hover {
-    background: oklch(var(--bc) / 0.3);
+/* ========================================
+   组件样式覆盖
+   ======================================== */
+
+.card {
+    @apply glass-card border-none; 
+    /* DaisyUI card default override */
+    border-radius: var(--radius-lg);
 }
 
-/* 卡片悬停效果 */
-.card-hover {
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.card-hover:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
-}
-
-/* 列表项悬停 */
-.list-item-hover {
+.btn {
+    @apply transition-all duration-200 active:scale-95;
     border-radius: var(--radius-md);
-    transition: background-color 0.15s ease;
+    font-weight: 500;
+    letter-spacing: 0.025em;
 }
 
-.list-item-hover:hover {
-    background-color: oklch(var(--b2));
+.btn-primary {
+    box-shadow: 0 4px 12px oklch(var(--p) / 0.3);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 6px 16px oklch(var(--p) / 0.4);
+}
+
+.input, .select, .textarea {
+    @apply transition-all duration-200;
+    border-radius: var(--radius-md);
+    background-color: oklch(var(--b2) / 0.5);
+    border-color: transparent;
+}
+
+.input:focus, .select:focus, .textarea:focus {
+    background-color: oklch(var(--b1));
+    border-color: oklch(var(--p));
+    box-shadow: 0 0 0 2px oklch(var(--p) / 0.2);
+    outline: none;
+}
+
+.table {
+    border-radius: var(--radius-lg);
+    background-color: transparent;
+}
+
+.table :where(thead, tfoot) {
+    color: oklch(var(--bc) / 0.7);
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.table :where(th, td) {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+/* 徽章优化 */
+.badge {
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    letter-spacing: 0.025em;
+}
+
+/* 页面容器 */
+.page-container {
+    @apply container mx-auto p-4 md:p-6 lg:p-8 animate-fade-in;
+    max-width: 1400px;
+}
+
+/* 响应式网格 */
+.grid-cards {
+    display: grid;
+    gap: var(--gap-grid);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
