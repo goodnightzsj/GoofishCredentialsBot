@@ -1,7 +1,6 @@
 import { Hono } from 'hono'
 
 import { createLogger } from '../../core/logger.js'
-import { CookiesManager } from '../../core/cookies.manager.js'
 import {
     getAllAccounts,
     getAccount,
@@ -22,11 +21,14 @@ export function createAccountRoutes(getClientManager: () => ClientManager | null
 
     // 获取所有账号
     router.get('/', (c) => {
-        const accounts = getAllAccounts().map(a => ({
-            ...a,
-            cookies: a.cookies.substring(0, 50) + '...',
-            status: getAccountStatus(a.id)
-        }))
+        const accounts = getAllAccounts().map(a => {
+            const { cookies, ...safe } = a
+            return {
+                ...safe,
+                hasCookies: !!cookies,
+                status: getAccountStatus(a.id)
+            }
+        })
         return c.json({ accounts })
     })
 
@@ -37,9 +39,10 @@ export function createAccountRoutes(getClientManager: () => ClientManager | null
         if (!account) {
             return c.json({ error: 'Account not found' }, 404)
         }
+        const { cookies, ...safe } = account
         return c.json({
-            ...account,
-            cookies: account.cookies.substring(0, 50) + '...',
+            ...safe,
+            hasCookies: !!cookies,
             status: getAccountStatus(id)
         })
     })

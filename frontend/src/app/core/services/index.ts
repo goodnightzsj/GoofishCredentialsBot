@@ -3,6 +3,7 @@
  */
 
 export { AccountService } from './account.service';
+export { AuthService } from './auth.service';
 export { GoodsService } from './goods.service';
 export { ConversationService } from './conversation.service';
 export { LogService } from './log.service';

@@ -29,6 +29,42 @@
         </div>
     </div>
 
+    <!-- 安全设置 -->
+    <div class="card bg-base-100 shadow-sm">
+        <div class="card-body">
+            <div class="flex items-center gap-2">
+                <lucide-icon [img]="icons.ShieldAlert" class="w-5 h-5 text-primary"></lucide-icon>
+                <h3 class="card-title text-lg">安全配置</h3>
+            </div>
+            <p class="text-sm text-base-content/60 mt-1">配置管理员 Token（需与后端 `ADMIN_TOKEN` 一致）</p>
+
+            <div class="form-control mt-4">
+                <label class="label py-1">
+                    <span class="label-text">管理员 Token</span>
+                </label>
+                <input type="password" class="input input-bordered input-sm w-full" placeholder="Bearer Token"
+                    [ngModel]="adminToken()" (ngModelChange)="updateAdminToken($event)" />
+                <label class="label py-1">
+                    @if (authService.token()) {
+                    <span class="label-text-alt text-success">已配置</span>
+                    } @else {
+                    <span class="label-text-alt text-warning">未配置：除 `/status`、`/health` 外的接口将返回 401</span>
+                    }
+                </label>
+            </div>
+
+            <div class="flex gap-2 mt-4">
+                <button class="btn btn-primary btn-sm" [disabled]="savingToken()" (click)="saveAdminToken()">
+                    @if (savingToken()) {
+                    <span class="loading loading-spinner loading-xs"></span>
+                    }
+                    保存 Token
+                </button>
+                <button class="btn btn-ghost btn-sm" (click)="clearAdminToken()">清除</button>
+            </div>
+        </div>
+    </div>
+
     <!-- AI 设置 -->
     <div class="card bg-base-100 shadow-sm">
         <div class="card-body">

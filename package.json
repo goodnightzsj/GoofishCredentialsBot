@@ -9,7 +9,7 @@
     "build:frontend": "cd frontend && npm install && npm run build && cd .. && npm run copy:frontend",
     "copy:frontend": "node -e \"const fs=require('fs');const path=require('path');function copyDir(s,d){fs.mkdirSync(d,{recursive:true});fs.readdirSync(s).forEach(f=>{const sp=path.join(s,f),dp=path.join(d,f);fs.statSync(sp).isDirectory()?copyDir(sp,dp):fs.copyFileSync(sp,dp)});} copyDir('frontend/dist/frontend/browser','public');\"",
     "dev": "npm run clean && npm run build:frontend && tsx watch src/index.ts",
-    "server": "npm run clean && npm run build:frontend && npm run build && node dist/index.js",
+    "server": "npm run clean && npm run build:frontend && npm run build && NODE_ENV=production node dist/index.js",
     "pm2:start": "npm run clean && npm run build:frontend && npm run build && pm2 start ecosystem.config.cjs",
     "pm2:stop": "pm2 stop ecosystem.config.cjs",
     "pm2:restart": "pm2 restart ecosystem.config.cjs",

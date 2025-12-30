@@ -8,7 +8,7 @@ import path from 'path'
 
 import { createLogger } from '../core/logger.js'
 import { SERVER_CONFIG, ENV } from '../core/constants.js'
-import { securityMiddleware } from './middlewares/index.js'
+import { adminAuthMiddleware } from './middlewares/index.js'
 import {
     createAccountRoutes,
     createGoodsRoutes,
@@ -50,10 +50,22 @@ export function createApp() {
     upgradeWebSocket = nodeWS.upgradeWebSocket
     injectWebSocket = nodeWS.injectWebSocket
 
-    app.use('*', cors())
+    // CORS：生产环境默认同源访问不需要；开发环境允许前端 dev-server 调试。
+    if (ENV.IS_DEV) {
+        const allowedOrigins = (process.env.DEV_CORS_ORIGINS || 'http://localhost:4200,http://127.0.0.1:4200')
+            .split(',')
+            .map(s => s.trim())
+            .filter(Boolean)
+        app.use('*', cors({
+            origin: (origin) => {
+                if (!origin) return null
+                return allowedOrigins.includes(origin) ? origin : null
+            }
+        }))
+    }
 
-    // 安全中间件 - 限制 API 只能从前端请求（排除 WebSocket）
-    app.use('/api/*', securityMiddleware)
+    // 管理接口鉴权（/api/status 与 /api/health 允许匿名探活）
+    app.use('/api/*', adminAuthMiddleware)
 
     // API 日志 - 只记录非 GET 请求，减少日志量
     app.use('/api/*', async (c, next) => {
@@ -63,8 +75,8 @@ export function createApp() {
         }
     })
 
-    // WebSocket 推送端点
-    app.get('/ws', upgradeWebSocket(() => createWSPushHandler(getClientManager)))
+    // WebSocket 推送端点（同样需要鉴权，浏览器端建议使用 ?token=...）
+    app.get('/ws', adminAuthMiddleware, upgradeWebSocket(() => createWSPushHandler(getClientManager)))
 
     // 挂载路由模块
     const statusRoutes = createStatusRoutes(getClientManager)

@@ -56,6 +56,8 @@ cd frontend && npm install && cd ..
 npm run dev
 
 # 生产部署
+# 需先设置管理员 Token（用于访问管理接口）
+export ADMIN_TOKEN="your-strong-token"
 npm run server
 
 # PM2 部署
@@ -65,6 +67,7 @@ npm run pm2:logs
 ```
 
 访问 `http://localhost:3000` 进入管理界面。
+首次进入后请到「系统设置 -> 安全配置」中填入同一个 Token（本地浏览器保存），否则除 `/health`、`/status` 外的接口将返回 401。
 
 ### Docker 运行
 
@@ -73,13 +76,15 @@ npm run pm2:logs
 docker build -f docker/Dockerfile -t goofishcbot:local .
 
 # 运行本地构建的镜像（建议挂载 data/logs 以持久化）
-docker run --rm -p 3000:3000 \
+docker run --rm -p 127.0.0.1:3000:3000 \
+  -e ADMIN_TOKEN="your-strong-token" \
   -v $(pwd)/data:/app/data \
   -v $(pwd)/logs:/app/logs \
   goofishcbot:local
 
 # 或：运行 Docker Hub 上的镜像（把 <username> 替换成你的 Docker Hub 用户名）
-docker run --rm -p 3000:3000 \
+docker run --rm -p 127.0.0.1:3000:3000 \
+  -e ADMIN_TOKEN="your-strong-token" \
   -v $(pwd)/data:/app/data \
   -v $(pwd)/logs:/app/logs \
   <username>/goofishcbot:latest

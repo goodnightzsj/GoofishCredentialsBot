@@ -5,7 +5,8 @@ import { filter, Subscription } from 'rxjs';
 import { DesktopLayoutComponent } from '../desktop-layout/desktop-layout.component';
 import { MobileLayoutComponent } from '../mobile-layout/mobile-layout.component';
 import { DialogComponent } from '../../shared/dialog';
-import { AccountService, WSPushService, ThemeService } from '../../core/services';
+import { DialogService } from '../../shared/dialog';
+import { AccountService, WSPushService, ThemeService, AuthService } from '../../core/services';
 import type { Account, StatusResponse } from '../../core/types';
 import type { ViewType } from '../../components/sidebar/sidebar.component';
 
@@ -21,6 +22,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     private readonly wsPushService = inject(WSPushService);
     private readonly router = inject(Router);
     private readonly themeService = inject(ThemeService);
+    private readonly authService = inject(AuthService);
+    private readonly dialog = inject(DialogService);
     private wsSubscription: Subscription | null = null;
 
     currentView = signal<ViewType>('dashboard');
@@ -29,7 +32,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     loading = signal(false);
     sidebarCollapsed = signal(false);
 
-    ngOnInit() {
+    async ngOnInit() {
         this.router.events
             .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
             .subscribe((event) => {
@@ -39,6 +42,18 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
 
         const initialPath = this.router.url.split('/')[1] || 'dashboard';
         this.currentView.set(initialPath as ViewType);
+
+        if (!this.authService.token()) {
+            const goSetting = await this.dialog.confirm(
+                '需要管理员 Token',
+                '未配置管理员 Token。除 /status、/health 外的接口将返回 401。\n是否前往“系统设置”配置？',
+                '前往设置',
+                '稍后'
+            );
+            if (goSetting) {
+                this.router.navigate(['/setting']);
+            }
+        }
 
         this.loadData();
         this.subscribeWS();

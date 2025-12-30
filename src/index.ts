@@ -4,6 +4,7 @@ import { initDatabase, closeDatabase } from './db/index.js'
 import { startServer, setClientManager, messageStore, conversationStore } from './api/index.js'
 import { fetchUserHead, handleOrderMessage, fetchAndUpdateOrderDetail } from './services/index.js'
 import { SERVER_CONFIG, LOG_CONFIG } from './core/constants.js'
+import { requireAdminToken } from './api/middlewares/admin-auth.middleware.js'
 
 const logger = createLogger('App')
 
@@ -16,6 +17,9 @@ async function main() {
 
     // 清理过期日志
     cleanOldLogs(LOG_CONFIG.RETENTION_DAYS)
+
+    // 安全：生产环境必须配置 ADMIN_TOKEN
+    requireAdminToken()
 
     logger.info('启动闲鱼多账号WebSocket客户端...')
 

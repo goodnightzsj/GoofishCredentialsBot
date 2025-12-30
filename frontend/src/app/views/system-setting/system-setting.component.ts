@@ -4,7 +4,7 @@ import { LucideAngularModule } from 'lucide-angular';
 
 import { ICONS } from '../../shared/icons';
 import { DialogService } from '../../shared/dialog';
-import { ThemeService, SettingsService, type ThemeMode, type AISettings } from '../../core/services';
+import { ThemeService, SettingsService, AuthService, type ThemeMode, type AISettings } from '../../core/services';
 
 @Component({
     selector: 'app-system-setting',
@@ -16,8 +16,12 @@ import { ThemeService, SettingsService, type ThemeMode, type AISettings } from '
 export class SystemSettingComponent implements OnInit {
     readonly themeService = inject(ThemeService);
     readonly settingsService = inject(SettingsService);
+    readonly authService = inject(AuthService);
     readonly dialog = inject(DialogService);
     readonly icons = ICONS;
+
+    adminToken = signal(this.authService.token());
+    savingToken = signal(false);
 
     aiSettings = signal<AISettings>({
         baseUrl: '',
@@ -31,6 +35,27 @@ export class SystemSettingComponent implements OnInit {
 
     ngOnInit() {
         this.loadAISettings();
+    }
+
+    updateAdminToken(value: string) {
+        this.adminToken.set(value);
+    }
+
+    async saveAdminToken() {
+        this.savingToken.set(true);
+        try {
+            this.authService.setToken(this.adminToken());
+            await this.dialog.alert('保存成功', '管理员 Token 已保存到本地浏览器');
+        } finally {
+            this.savingToken.set(false);
+        }
+    }
+
+    async clearAdminToken() {
+        const confirmed = await this.dialog.confirm('清除 Token', '确定清除本地保存的管理员 Token？');
+        if (!confirmed) return;
+        this.authService.clearToken();
+        this.adminToken.set('');
     }
 
     async loadAISettings() {

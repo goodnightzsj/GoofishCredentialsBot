@@ -1,6 +1,7 @@
-import { Injectable, NgZone, inject } from '@angular/core';
+import { Injectable, NgZone, effect, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 
+import { AuthService } from './auth.service';
 import type { Order, Account, Conversation } from '../types';
 
 export interface OrdersUpdate {
@@ -26,16 +27,47 @@ interface WSMessage {
 @Injectable({ providedIn: 'root' })
 export class WSPushService {
     private zone = inject(NgZone);
+    private authService = inject(AuthService);
     private ws: WebSocket | null = null;
     private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
     private subscriptions = new Set<string>();
     private params: Record<string, string | number | undefined> = {};
+    private wsToken: string | null = null;
 
     readonly orders$ = new Subject<OrdersUpdate>();
     readonly accounts$ = new Subject<AccountsUpdate>();
     readonly conversations$ = new Subject<ConversationsUpdate>();
 
+    constructor() {
+        // Token 变化时：有订阅则自动连接/重连；无 token 则断开。
+        effect(() => {
+            const token = this.authService.token();
+            if (!token) {
+                this.wsToken = null;
+                if (this.reconnectTimer) {
+                    clearTimeout(this.reconnectTimer);
+                    this.reconnectTimer = null;
+                }
+                this.ws?.close();
+                this.ws = null;
+                return;
+            }
+            if (this.subscriptions.size > 0) {
+                this.connect();
+            }
+        });
+    }
+
     private connect(): void {
+        const token = this.authService.token();
+        if (!token) return;
+
+        // Token 变化时强制重连（WebSocket 无法更新 URL/query）。
+        if (this.wsToken && this.wsToken !== token) {
+            this.ws?.close();
+            this.ws = null;
+        }
+
         if (this.ws?.readyState === WebSocket.OPEN) return;
         if (this.ws?.readyState === WebSocket.CONNECTING) return;
 
@@ -46,8 +78,13 @@ export class WSPushService {
         }
 
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const host = window.location.host;
-        this.ws = new WebSocket(`${protocol}//${host}/ws`);
+        const host =
+            window.location.port === '4200'
+                ? 'localhost:3000'
+                : window.location.host;
+
+        this.wsToken = token;
+        this.ws = new WebSocket(`${protocol}//${host}/ws?token=${encodeURIComponent(token)}`);
 
         this.ws.onopen = () => {
             // 连接成功后发送所有订阅

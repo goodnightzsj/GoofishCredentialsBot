@@ -3,9 +3,12 @@ import { existsSync, mkdirSync, writeFileSync, readdirSync, unlinkSync, statSync
 import { join } from 'path'
 
 import { createLogger } from '../../core/logger.js'
+import { ENV } from '../../core/constants.js'
 import { decryptMessagePack } from '../../utils/msgpack.js'
 
 const logger = createLogger('Api:DevMsg')
+
+const RAW_LOG_ENABLED = ENV.IS_DEV || process.env.RAW_LOG_ENABLED === 'true'
 
 // raw 日志目录
 const RAW_LOG_DIR = join(process.cwd(), 'logs', 'raw')
@@ -98,6 +101,8 @@ function saveRawToFile(accountId: string, data: any, decoded: any[] | null) {
 
 // 添加原始消息到缓冲区
 export function addRawMessage(accountId: string, data: any) {
+    if (!RAW_LOG_ENABLED) return
+
     const decoded = decodeMessageData(data)
 
     // 保存到文件（包含解码后的数据）
@@ -156,8 +161,10 @@ export function cleanOldRawMessages() {
 }
 
 // 启动时清理一次，之后每小时清理
-cleanOldRawMessages()
-setInterval(cleanOldRawMessages, 60 * 60 * 1000)
+if (RAW_LOG_ENABLED) {
+    cleanOldRawMessages()
+    setInterval(cleanOldRawMessages, 60 * 60 * 1000)
+}
 
 export function createDevMessageRoutes() {
     const router = new Hono()

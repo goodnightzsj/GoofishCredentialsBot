@@ -4,6 +4,21 @@ import path from 'path'
 
 const logsDir = path.join(process.cwd(), 'logs')
 
+function isValidDateSegment(date: string): boolean {
+    return /^\d{4}-\d{2}-\d{2}$/.test(date)
+}
+
+function isSafeLogFileName(file: string): boolean {
+    return /^[A-Za-z0-9_.-]+\.log$/.test(file)
+}
+
+function resolveInside(baseDir: string, ...paths: string[]): string | null {
+    const resolvedBase = path.resolve(baseDir) + path.sep
+    const resolvedTarget = path.resolve(baseDir, ...paths)
+    if (!resolvedTarget.startsWith(resolvedBase)) return null
+    return resolvedTarget
+}
+
 export function createLogsRoutes() {
     const app = new Hono()
 
@@ -28,7 +43,14 @@ export function createLogsRoutes() {
     app.get('/files/:date', (c) => {
         try {
             const date = c.req.param('date')
-            const dayDir = path.join(logsDir, date)
+            if (!isValidDateSegment(date)) {
+                return c.json({ error: '非法日期参数' }, 400)
+            }
+
+            const dayDir = resolveInside(logsDir, date)
+            if (!dayDir) {
+                return c.json({ error: '非法路径' }, 400)
+            }
             if (!fs.existsSync(dayDir)) {
                 return c.json({ files: [] })
             }
@@ -50,9 +72,18 @@ export function createLogsRoutes() {
         try {
             const date = c.req.param('date')
             const file = c.req.param('file')
+            if (!isValidDateSegment(date)) {
+                return c.json({ error: '非法日期参数' }, 400)
+            }
+            if (!isSafeLogFileName(file)) {
+                return c.json({ error: '非法文件名' }, 400)
+            }
             const level = c.req.query('level')
             const limit = c.req.query('limit') || '500'
-            const filePath = path.join(logsDir, date, file)
+            const filePath = resolveInside(logsDir, date, file)
+            if (!filePath) {
+                return c.json({ error: '非法路径' }, 400)
+            }
 
             if (!fs.existsSync(filePath)) {
                 return c.json({ error: '日志文件不存在' }, 404)

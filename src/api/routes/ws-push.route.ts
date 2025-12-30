@@ -3,7 +3,6 @@
  * 替代 SSE，使用 WebSocket 实现实时数据推送
  */
 
-import { Hono } from 'hono'
 import type { WSContext } from 'hono/ws'
 
 import { createLogger } from '../../core/logger.js'
@@ -15,12 +14,21 @@ import type { ClientManager } from '../../websocket/client.manager.js'
 
 const logger = createLogger('Api:WS')
 
+const ALLOWED_EVENTS = new Set(['orders', 'accounts', 'conversations'])
+
 // 存储所有 WebSocket 连接
 const wsClients = new Set<{
     ws: WSContext
     subscriptions: Set<string>
     params: Record<string, string | number | undefined>
 }>()
+
+function sanitizeAccounts() {
+    return getAllAccounts().map((a) => {
+        const { cookies, ...safe } = a
+        return { ...safe, hasCookies: !!cookies }
+    })
+}
 
 // 发送数据到订阅了特定事件的客户端
 function broadcast(event: string, getData: (params: Record<string, string | number | undefined>) => unknown) {
@@ -63,7 +71,7 @@ export function initWSEvents(getClientManager: () => ClientManager | null) {
     // 账号更新
     appEvents.on(Events.ACCOUNTS_UPDATED, () => {
         broadcast('accounts', () => {
-            const accounts = getAllAccounts()
+            const accounts = sanitizeAccounts()
             const clientManager = getClientManager()
             const clients = clientManager?.getStatus() || []
             return { accounts, clients }
@@ -105,31 +113,42 @@ export function createWSPushHandler(getClientManager: () => ClientManager | null
 
                 // 订阅消息格式: { action: 'subscribe', events: ['orders', 'accounts'], params: { accountId: '...' } }
                 if (msg.action === 'subscribe' && Array.isArray(msg.events)) {
-                    for (const evt of msg.events) {
+                    const events = msg.events.filter((evt: unknown): evt is string => typeof evt === 'string' && ALLOWED_EVENTS.has(evt))
+                    for (const evt of events) {
                         client.subscriptions.add(evt)
                     }
-                    if (msg.params) {
-                        Object.assign(client.params, msg.params)
+                    if (msg.params && typeof msg.params === 'object') {
+                        const nextParams: Record<string, string | number | undefined> = {}
+                        if (typeof (msg.params as any).accountId === 'string') nextParams.accountId = (msg.params as any).accountId
+                        if (typeof (msg.params as any).status === 'number') nextParams.status = (msg.params as any).status
+                        if (typeof (msg.params as any).limit === 'number') nextParams.limit = (msg.params as any).limit
+                        Object.assign(client.params, nextParams)
                     }
 
                     // 立即发送当前数据
-                    for (const evt of msg.events) {
+                    for (const evt of events) {
                         sendInitialData(ws, evt, client.params, getClientManager)
                     }
 
-                    logger.debug(`客户端订阅: ${msg.events.join(', ')}`)
+                    logger.debug(`客户端订阅: ${events.join(', ')}`)
                 }
 
                 // 取消订阅: { action: 'unsubscribe', events: ['orders'] }
                 if (msg.action === 'unsubscribe' && Array.isArray(msg.events)) {
                     for (const evt of msg.events) {
-                        client.subscriptions.delete(evt)
+                        if (typeof evt === 'string' && ALLOWED_EVENTS.has(evt)) {
+                            client.subscriptions.delete(evt)
+                        }
                     }
                 }
 
                 // 更新参数: { action: 'updateParams', params: { accountId: '...' } }
-                if (msg.action === 'updateParams' && msg.params) {
-                    Object.assign(client.params, msg.params)
+                if (msg.action === 'updateParams' && msg.params && typeof msg.params === 'object') {
+                    const nextParams: Record<string, string | number | undefined> = {}
+                    if (typeof (msg.params as any).accountId === 'string') nextParams.accountId = (msg.params as any).accountId
+                    if (typeof (msg.params as any).status === 'number') nextParams.status = (msg.params as any).status
+                    if (typeof (msg.params as any).limit === 'number') nextParams.limit = (msg.params as any).limit
+                    Object.assign(client.params, nextParams)
                     // 重新发送订阅的数据
                     for (const evt of client.subscriptions) {
                         sendInitialData(ws, evt, client.params, getClientManager)
@@ -186,7 +205,7 @@ function sendInitialData(
                 break
             }
             case 'accounts': {
-                const accounts = getAllAccounts()
+                const accounts = sanitizeAccounts()
                 const clientManager = getClientManager()
                 const clients = clientManager?.getStatus() || []
                 data = { accounts, clients }

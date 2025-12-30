@@ -4,7 +4,8 @@
 
 export interface Account {
     id: string;
-    cookies: string;
+    cookies?: string;
+    hasCookies?: boolean;
     userId?: string;
     nickname?: string;
     avatar?: string;
