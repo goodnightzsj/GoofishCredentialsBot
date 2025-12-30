@@ -33,7 +33,7 @@ body {
     -moz-osx-font-smoothing: grayscale;
     background-color: oklch(var(--b1));
     color: oklch(var(--bc));
-    background-image: 
+    background-image:
         radial-gradient(circle at 10% 20%, oklch(var(--p) / 0.05) 0%, transparent 40%),
         radial-gradient(circle at 90% 80%, oklch(var(--s) / 0.05) 0%, transparent 40%);
     background-attachment: fixed;
@@ -52,7 +52,11 @@ body {
 }
 
 .glass-card {
-    @apply glass-effect shadow-md rounded-2xl transition-all duration-300;
+    background: oklch(var(--b1) / 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid oklch(var(--bc) / 0.05);
+    @apply shadow-md rounded-2xl transition-all duration-300;
 }
 
 .glass-card:hover {
@@ -61,13 +65,27 @@ body {
 
 /* 动画 */
 @keyframes fade-in {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes slide-in-left {
-    from { opacity: 0; transform: translateX(-20px); }
-    to { opacity: 1; transform: translateX(0); }
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .animate-fade-in {
@@ -78,9 +96,17 @@ body {
     animation: slide-in-left 0.4s ease-out forwards;
 }
 
-.stagger-1 { animation-delay: 100ms; }
-.stagger-2 { animation-delay: 200ms; }
-.stagger-3 { animation-delay: 300ms; }
+.stagger-1 {
+    animation-delay: 100ms;
+}
+
+.stagger-2 {
+    animation-delay: 200ms;
+}
+
+.stagger-3 {
+    animation-delay: 300ms;
+}
 
 /* 细滚动条 */
 ::-webkit-scrollbar {
@@ -107,7 +133,12 @@ body {
    ======================================== */
 
 .card {
-    @apply glass-card border-none; 
+    background: oklch(var(--b1) / 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid oklch(var(--bc) / 0.05);
+    /* Equivalent to glass-effect */
+    @apply border-none;
     /* DaisyUI card default override */
     border-radius: var(--radius-lg);
 }
@@ -127,14 +158,18 @@ body {
     box-shadow: 0 6px 16px oklch(var(--p) / 0.4);
 }
 
-.input, .select, .textarea {
+.input,
+.select,
+.textarea {
     @apply transition-all duration-200;
     border-radius: var(--radius-md);
     background-color: oklch(var(--b2) / 0.5);
     border-color: transparent;
 }
 
-.input:focus, .select:focus, .textarea:focus {
+.input:focus,
+.select:focus,
+.textarea:focus {
     background-color: oklch(var(--b1));
     border-color: oklch(var(--p));
     box-shadow: 0 0 0 2px oklch(var(--p) / 0.2);
