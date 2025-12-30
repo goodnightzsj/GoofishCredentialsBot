@@ -81,7 +81,7 @@
 }
 
 .sidebar-menu-item.active {
-    background-color: color-mix(in oklch, var(--color-primary) 15%, transparent) !important;
+    /* background-color: color-mix(in oklch, var(--color-primary) 15%, transparent) !important; */
     color: var(--color-primary) !important;
     border-left: 4px solid var(--color-primary);
     /* Left border is standard */

@@ -3,3 +3,74 @@
     height: 100%;
     overflow-y: auto;
 }
+
+/* ========================================
+   订单状态徽章
+   ======================================== */
+.order-status {
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+}
+
+/* 待付款 - 橙色 */
+.order-status-pending {
+    background-color: color-mix(in oklch, #f59e0b 15%, transparent);
+    color: #d97706;
+    border: 1px solid color-mix(in oklch, #f59e0b 25%, transparent);
+}
+
+/* 待发货 - 蓝色 */
+.order-status-paid {
+    background-color: color-mix(in oklch, #3b82f6 15%, transparent);
+    color: #2563eb;
+    border: 1px solid color-mix(in oklch, #3b82f6 25%, transparent);
+}
+
+/* 已发货 - 紫色 */
+.order-status-shipped {
+    background-color: color-mix(in oklch, #8b5cf6 15%, transparent);
+    color: #7c3aed;
+    border: 1px solid color-mix(in oklch, #8b5cf6 25%, transparent);
+}
+
+/* 已完成 - 绿色 */
+.order-status-completed {
+    background-color: color-mix(in oklch, #22c55e 15%, transparent);
+    color: #16a34a;
+    border: 1px solid color-mix(in oklch, #22c55e 25%, transparent);
+}
+
+/* 已取消 - 灰色 */
+.order-status-cancelled {
+    background-color: color-mix(in oklch, #6b7280 15%, transparent);
+    color: #4b5563;
+    border: 1px solid color-mix(in oklch, #6b7280 25%, transparent);
+}
+
+/* 退款中 - 红色 */
+.order-status-refunding {
+    background-color: color-mix(in oklch, #ef4444 15%, transparent);
+    color: #dc2626;
+    border: 1px solid color-mix(in oklch, #ef4444 25%, transparent);
+}
+
+/* ========================================
+   订单价格
+   ======================================== */
+.order-price {
+    font-weight: 700;
+    color: #dc2626;
+}
+
+/* ========================================
+   订单卡片悬停
+   ======================================== */
+.order-row {
+    transition: background-color var(--transition-fast);
+}
+
+.order-row:hover {
+    background-color: color-mix(in oklch, var(--color-primary) 5%, transparent);
+}

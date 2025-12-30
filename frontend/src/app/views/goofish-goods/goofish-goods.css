@@ -1,22 +1,142 @@
+/* ========================================
+   商品网格布局
+   ======================================== */
 .goods-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--gap-grid);
 }
 
-.goods-image {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-}
-
 @media (min-width: 640px) {
     .goods-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     }
 }
 
+/* ========================================
+   商品卡片悬停效果
+   ======================================== */
+.goods-grid .card {
+    overflow: hidden;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.goods-grid .card:hover {
+    transform: translateY(-6px);
+    box-shadow:
+        0 20px 40px -10px rgba(0, 0, 0, 0.12),
+        var(--shadow-glow);
+}
+
+/* 图片悬停缩放 */
+.goods-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    transition: transform var(--transition-slow);
+}
+
+.goods-grid .card:hover .goods-image {
+    transform: scale(1.05);
+}
+
+/* ========================================
+   价格样式增强
+   ======================================== */
+.goods-price {
+    font-size: 1.125rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ef4444, #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ========================================
+   状态徽章
+   ======================================== */
+.badge-on-sale {
+    background-color: color-mix(in oklch, #22c55e 15%, transparent);
+    color: #16a34a;
+    border: 1px solid color-mix(in oklch, #22c55e 30%, transparent);
+}
+
+.badge-off-shelf {
+    background-color: color-mix(in oklch, #9ca3af 15%, transparent);
+    color: #6b7280;
+    border: 1px solid color-mix(in oklch, #9ca3af 30%, transparent);
+}
+
+/* ========================================
+   空状态增强
+   ======================================== */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-state-icon {
+    width: 5rem;
+    height: 5rem;
+    margin: 0 auto 1.5rem;
+    color: color-mix(in oklch, var(--color-base-content) 20%, transparent);
+    animation: float 3s ease-in-out infinite;
+}
+
+
+
+.empty-state-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: color-mix(in oklch, var(--color-base-content) 70%, transparent);
+    margin-bottom: 0.5rem;
+}
+
+.empty-state-desc {
+    font-size: 0.875rem;
+    color: color-mix(in oklch, var(--color-base-content) 50%, transparent);
+    margin-bottom: 1.5rem;
+}
+
+/* ========================================
+   骨架屏加载
+   ======================================== */
+.skeleton-card {
+    background: var(--color-base-200);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.skeleton-image {
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(90deg,
+            var(--color-base-200) 0%,
+            var(--color-base-100) 50%,
+            var(--color-base-200) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.skeleton-text {
+    height: 1rem;
+    margin: 0.75rem;
+    border-radius: 0.25rem;
+    background: linear-gradient(90deg,
+            var(--color-base-200) 0%,
+            var(--color-base-100) 50%,
+            var(--color-base-200) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.skeleton-text-short {
+    width: 60%;
+}
+
+/* ========================================
+   移动端优化
+   ======================================== */
 @media (max-width: 639px) {
     .goods-grid .card-body {
         padding: 0.75rem;
@@ -24,5 +144,9 @@
 
     .goods-grid .card-title {
         font-size: 0.8rem;
+    }
+
+    .goods-price {
+        font-size: 1rem;
     }
 }

@@ -143,12 +143,12 @@
                                 <td>{{ account.remark || '-' }}</td>
                                 <td>
                                     @if (isConnected(account.id)) {
-                                    <span class="badge badge-success badge-sm gap-1">
-                                        <span class="w-1.5 h-1.5 bg-success-content rounded-full animate-pulse"></span>
+                                    <span class="account-status account-status-online">
+                                        <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse-custom"></span>
                                         在线
                                     </span>
                                     } @else {
-                                    <span class="badge badge-ghost badge-sm">离线</span>
+                                    <span class="account-status account-status-offline">离线</span>
                                     }
                                 </td>
                                 <td class="text-base-content/50 text-xs">{{ formatTime(account.updatedAt) }}</td>
@@ -209,13 +209,13 @@
                                     <div class="flex justify-between items-center">
                                         <span class="font-medium">{{ account.nickname || '未知用户' }}</span>
                                         @if (isConnected(account.id)) {
-                                        <span class="badge badge-success badge-sm gap-1">
+                                        <span class="account-status account-status-online">
                                             <span
-                                                class="w-1.5 h-1.5 bg-success-content rounded-full animate-pulse"></span>
+                                                class="w-1.5 h-1.5 bg-white rounded-full animate-pulse-custom"></span>
                                             在线
                                         </span>
                                         } @else {
-                                        <span class="badge badge-ghost badge-sm">离线</span>
+                                        <span class="account-status account-status-offline">离线</span>
                                         }
                                     </div>
                                     <div class="text-xs text-base-content/50 font-mono">{{ account.id }}</div>

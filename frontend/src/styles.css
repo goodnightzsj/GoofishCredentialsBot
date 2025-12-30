@@ -16,35 +16,52 @@
     --radius-lg: 1rem;
     --radius-xl: 1.5rem;
 
-    /* 默认(浅色)模式 - 科技感清透风格 */
-    --glass-bg: rgba(255, 255, 255, 0.85);
-    /* 0.75 -> 0.85 */
-    --glass-border: 1px solid rgba(255, 255, 255, 0.8);
-    /* 0.6 -> 0.8 */
+    /* 过渡时间 (Warm Modern) */
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* 渐变 */
+    --gradient-primary: linear-gradient(135deg, var(--color-primary), oklch(55% 0.22 290));
+    --gradient-warm: linear-gradient(135deg, oklch(97% 0.01 90), oklch(98% 0.005 60));
+
+    /* 增强阴影系统 */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+    --shadow-glow: 0 0 20px color-mix(in oklch, var(--color-primary) 15%, transparent);
+
+    /* 默认(浅色)模式 - 温暖现代风格 */
+    --glass-bg: rgba(255, 255, 255, 0.88);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.9);
     --glass-shadow:
-        0 4px 6px -1px rgba(0, 0, 0, 0.08),
-        /* 0.02 -> 0.08 */
-        0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        /* 0.04 -> 0.1 */
-        0 0 0 1px rgba(0, 0, 0, 0.08),
-        /* Ring 0.02 -> 0.08 */
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
-    /* Highlight */
-    /* 内描边增强层次 */
+        0 4px 6px -1px rgba(0, 0, 0, 0.06),
+        0 10px 15px -3px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 0 rgba(255, 255, 255, 1);
+
+    /* 层级系统 */
+    --z-navbar: 30;
+    --z-drawer-overlay: 40;
+    --z-drawer: 50;
+    --z-dropdown: 100;
+    --z-modal: 200;
+    --z-toast: 300;
+    --z-tooltip: 400;
 
     /* 间距 */
     --spacing-page: 1.5rem;
     --gap-grid: 1.5rem;
 }
 
-/* 深色模式覆盖 - 赛博/科技暗黑风格 */
+/* 深色模式覆盖 - 温暖现代暗黑风格 */
 [data-theme='dark'] {
-    --glass-bg: rgba(30, 30, 40, 0.65);
-    --glass-border: 1px solid rgba(255, 255, 255, 0.12);
+    --glass-bg: rgba(28, 28, 35, 0.75);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.08);
     --glass-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-    /* 顶部高光 */
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+    --shadow-glow: 0 0 24px color-mix(in oklch, var(--color-primary) 20%, transparent);
 }
 
 body {
@@ -78,17 +95,17 @@ body {
     -webkit-backdrop-filter: blur(16px);
     border: var(--glass-border);
     box-shadow: var(--glass-shadow);
-    @apply rounded-2xl transition-all duration-300;
+    border-radius: var(--radius-xl);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
 }
 
 .glass-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
     box-shadow:
-        0 20px 25px -5px rgba(0, 0, 0, 0.05),
-        0 8px 10px -6px rgba(0, 0, 0, 0.05),
-        var(--glass-shadow);
-    /* 叠加基础阴影 */
-    border-color: color-mix(in oklch, var(--color-primary) 30%, transparent);
+        0 20px 40px -10px rgba(0, 0, 0, 0.1),
+        0 8px 16px -8px rgba(0, 0, 0, 0.06),
+        var(--shadow-glow);
+    border-color: color-mix(in oklch, var(--color-primary) 25%, transparent);
 }
 
 /* 动画 */
@@ -172,29 +189,50 @@ body {
 }
 
 .btn {
-    @apply transition-all duration-200 active:scale-95;
     border-radius: var(--radius-md);
     font-weight: 500;
     letter-spacing: 0.025em;
+    transition: transform var(--transition-fast), box-shadow var(--transition-normal);
+}
+
+.btn:active {
+    transform: scale(0.96);
 }
 
 .btn-primary {
-    box-shadow: 0 4px 12px color-mix(in oklch, var(--color-primary) 30%, transparent);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px color-mix(in oklch, var(--color-primary) 25%, transparent);
+}
+
+/* 按钮扫光动画 */
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
 }
 
 .btn-primary:hover {
-    box-shadow: 0 6px 16px color-mix(in oklch, var(--color-primary) 40%, transparent);
+    box-shadow: 0 8px 20px color-mix(in oklch, var(--color-primary) 35%, transparent);
+    transform: translateY(-1px);
 }
 
-.input,
-.select,
-.textarea {
-    @apply transition-all duration-200;
+/* Use :where to avoid specificity wars with DaisyUI, allowing override without !important if loaded later */
+:where(.input, .select, .textarea) {
     border-radius: var(--radius-md);
-    background-color: var(--color-base-100) !important;
-    /* Tailwind v4 base background */
-    border: 1px solid color-mix(in oklch, var(--color-base-content) 20%, transparent);
-    outline: none !important;
+    background-color: var(--color-base-100);
+    border: 1px solid color-mix(in oklch, var(--color-base-content) 15%, transparent);
+    outline: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .input:focus,
@@ -202,7 +240,9 @@ body {
 .textarea:focus {
     background-color: var(--color-base-100);
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px color-mix(in oklch, var(--color-primary) 20%, transparent);
+    box-shadow:
+        0 0 0 3px color-mix(in oklch, var(--color-primary) 15%, transparent),
+        0 0 12px color-mix(in oklch, var(--color-primary) 10%, transparent);
     outline: none;
 }
 
@@ -223,6 +263,24 @@ body {
     padding-bottom: 1rem;
 }
 
+/* 表格行悬停效果 */
+.table tbody tr {
+    transition: background-color var(--transition-fast);
+}
+
+.table tbody tr:hover {
+    background-color: color-mix(in oklch, var(--color-primary) 5%, transparent);
+}
+
+/* 斑马纹 (可选) */
+.table-zebra tbody tr:nth-child(even) {
+    background-color: color-mix(in oklch, var(--color-base-content) 3%, transparent);
+}
+
+[data-theme='dark'] .table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
 /* 徽章优化 */
 .badge {
     border-radius: var(--radius-sm);
@@ -233,7 +291,7 @@ body {
 /* 页面容器 */
 .page-container {
     @apply container mx-auto p-4 md:p-6 lg:p-8;
-    animation: fade-in 0.4s ease-out forwards;
+    animation: fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     max-width: 1400px;
 }
 
@@ -249,4 +307,120 @@ body {
     background-color: color-mix(in oklch, var(--color-primary) 20%, transparent);
     color: var(--color-primary);
     border: 1px solid var(--color-primary);
+}
+
+/* ========================================
+   全局动画库 - Animations
+   ======================================== */
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes pulse-custom {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(1.05);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-custom {
+    animation: pulse-custom 2s infinite;
+}
+
+.animate-shimmer {
+    background: linear-gradient(90deg,
+            var(--color-base-200) 0%,
+            var(--color-base-100) 50%,
+            var(--color-base-200) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.page-transition {
+    animation: fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ========================================
+   表单元素定制 - Custom Form Elements
+   ======================================== */
+
+/* Checkbox Warm Modern */
+.checkbox {
+    border-radius: var(--radius-sm);
+    border-width: 1.5px;
+    transition: all var(--transition-fast);
+}
+
+.checkbox:checked {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    animation: checkbox-pop 0.2s ease-out;
+}
+
+@keyframes checkbox-pop {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Toggle Warm Modern */
+.toggle {
+    border-width: 1px;
+    transition: background-color var(--transition-normal);
+}
+
+.toggle:checked {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 10px color-mix(in oklch, var(--color-primary) 30%, transparent);
 }

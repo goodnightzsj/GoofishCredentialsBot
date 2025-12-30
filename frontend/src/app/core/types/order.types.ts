@@ -20,12 +20,12 @@ export const ORDER_STATUS_TEXT: Record<number, string> = {
 }
 
 export const ORDER_STATUS_CLASS: Record<number, string> = {
-    0: 'badge-neutral',
-    [OrderStatus.PENDING_PAYMENT]: 'badge-warning',
-    [OrderStatus.PENDING_SHIPMENT]: 'badge-info',
-    [OrderStatus.PENDING_RECEIPT]: 'badge-primary',
-    [OrderStatus.COMPLETED]: 'badge-success',
-    [OrderStatus.CLOSED]: 'badge-ghost',
+    0: 'order-status order-status-pending',
+    [OrderStatus.PENDING_PAYMENT]: 'order-status order-status-pending',
+    [OrderStatus.PENDING_SHIPMENT]: 'order-status order-status-paid',
+    [OrderStatus.PENDING_RECEIPT]: 'order-status order-status-shipped',
+    [OrderStatus.COMPLETED]: 'order-status order-status-completed',
+    [OrderStatus.CLOSED]: 'order-status order-status-cancelled',
 }
 
 export interface Order {

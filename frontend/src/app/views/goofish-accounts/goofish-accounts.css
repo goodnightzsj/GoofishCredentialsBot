@@ -1,1 +1,86 @@
-/* daisyUI 组件已包含样式 */
+/* ========================================
+   账号状态徽章
+   ======================================== */
+.account-status {
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+}
+
+/* 在线 - 绿色 */
+.account-status-online {
+    background-color: color-mix(in oklch, #22c55e 15%, transparent);
+    color: #16a34a;
+    border: 1px solid color-mix(in oklch, #22c55e 25%, transparent);
+}
+
+/* 离线 - 灰色 */
+.account-status-offline {
+    background-color: color-mix(in oklch, #6b7280 15%, transparent);
+    color: #4b5563;
+    border: 1px solid color-mix(in oklch, #6b7280 25%, transparent);
+}
+
+/* 异常 - 红色 */
+.account-status-error {
+    background-color: color-mix(in oklch, #ef4444 15%, transparent);
+    color: #dc2626;
+    border: 1px solid color-mix(in oklch, #ef4444 25%, transparent);
+}
+
+/* 待验证 - 橙色 */
+.account-status-pending {
+    background-color: color-mix(in oklch, #f59e0b 15%, transparent);
+    color: #d97706;
+    border: 1px solid color-mix(in oklch, #f59e0b 25%, transparent);
+}
+
+/* ========================================
+   账号卡片
+   ======================================== */
+.account-card {
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.account-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 8px 16px -4px rgba(0, 0, 0, 0.08),
+        var(--shadow-glow);
+}
+
+/* 账号头像 */
+.account-avatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid color-mix(in oklch, var(--color-primary) 20%, transparent);
+}
+
+.account-avatar-placeholder {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+/* 在线指示点 */
+.online-indicator {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background-color: #22c55e;
+    border: 2px solid var(--color-base-100);
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    animation: pulse-custom 2s infinite;
+}

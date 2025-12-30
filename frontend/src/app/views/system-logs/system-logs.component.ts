@@ -188,11 +188,11 @@ export class SystemLogsComponent implements OnInit, OnDestroy {
 
     getLevelClass(level: string): string {
         switch (level) {
-            case 'DEBUG': return 'text-base-content/50';
-            case 'INFO': return 'text-info';
-            case 'WARN': return 'text-warning';
-            case 'ERROR': return 'text-error';
-            default: return '';
+            case 'DEBUG': return 'log-level log-level-debug';
+            case 'INFO': return 'log-level log-level-info';
+            case 'WARN': return 'log-level log-level-warn';
+            case 'ERROR': return 'log-level log-level-error';
+            default: return 'log-level';
         }
     }
 }
