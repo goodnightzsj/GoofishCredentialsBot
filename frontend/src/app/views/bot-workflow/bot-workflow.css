@@ -53,7 +53,7 @@
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-    background: oklch(var(--bc) / 0.2);
+    background: color-mix(in oklch, var(--color-base-content) 20%, transparent);
     border-radius: 2px;
 }
 

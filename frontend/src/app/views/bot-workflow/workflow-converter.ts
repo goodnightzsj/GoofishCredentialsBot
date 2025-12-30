@@ -10,7 +10,7 @@ export function getDefaultMindMapData(): MindMapNode {
             nodeType: 'trigger',
             fillColor: NODE_TYPES.trigger.color,
             borderColor: NODE_TYPES.trigger.color,
-            fontColor: '#ffffff'
+            color: '#ffffff'
         },
         children: []
     };
@@ -25,7 +25,7 @@ export function getDefaultWorkflowTemplate(): MindMapNode {
             nodeType: 'trigger',
             fillColor: NODE_TYPES.trigger.color,
             borderColor: NODE_TYPES.trigger.color,
-            fontColor: '#ffffff'
+            color: '#ffffff'
         },
         children: [
             {
@@ -35,7 +35,7 @@ export function getDefaultWorkflowTemplate(): MindMapNode {
                     nodeType: 'delivery',
                     fillColor: NODE_TYPES.delivery.color,
                     borderColor: NODE_TYPES.delivery.color,
-                    fontColor: '#ffffff'
+                    color: '#ffffff'
                 },
                 children: [
                     {
@@ -45,7 +45,7 @@ export function getDefaultWorkflowTemplate(): MindMapNode {
                             nodeType: 'ship',
                             fillColor: NODE_TYPES.ship.color,
                             borderColor: NODE_TYPES.ship.color,
-                            fontColor: '#ffffff'
+                            color: '#ffffff'
                         }
                     }
                 ]
@@ -73,7 +73,7 @@ export function definitionToMindMap(def: WorkflowDefinition): MindMapNode {
                 config: n.config,
                 fillColor: typeConfig?.color,
                 borderColor: typeConfig?.color,
-                fontColor: '#ffffff'
+                color: '#ffffff'
             },
             children: []
         });

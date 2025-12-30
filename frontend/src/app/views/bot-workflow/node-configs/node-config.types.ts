@@ -30,7 +30,7 @@ export interface MindMapNode {
         config?: Record<string, any>;
         fillColor?: string;
         borderColor?: string;
-        fontColor?: string;
+        color?: string;
     };
     children?: MindMapNode[];
 }
