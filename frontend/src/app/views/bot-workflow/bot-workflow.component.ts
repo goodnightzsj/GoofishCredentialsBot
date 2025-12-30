@@ -490,7 +490,7 @@ export class BotWorkflowComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getTextColor(type: string): string {
         // Bright colors that need black text for contrast
-        const brightTypes = ['delivery', 'ship', 'notify', 'trigger'];
+        const brightTypes = ['delivery', 'notify', 'trigger']; /* Removed 'ship' (purple) */
         return brightTypes.includes(type) ? '#000000' : '#ffffff';
     }
 }

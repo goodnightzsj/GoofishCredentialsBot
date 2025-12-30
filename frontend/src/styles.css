@@ -191,8 +191,8 @@ body {
 .textarea {
     @apply transition-all duration-200;
     border-radius: var(--radius-md);
-    background-color: oklch(var(--b2));
-    /* Solid background for select/input */
+    background-color: oklch(var(--b2) / 1) !important;
+    /* Force solid background */
     border-color: transparent;
 }
 
@@ -241,4 +241,11 @@ body {
     display: grid;
     gap: var(--gap-grid);
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* 深色模式下按钮选中态增强 */
+[data-theme='dark'] .btn-active {
+    background-color: oklch(var(--p) / 0.2);
+    color: oklch(var(--p));
+    border: 1px solid oklch(var(--p));
 }
