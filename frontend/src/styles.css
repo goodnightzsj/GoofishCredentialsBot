@@ -55,7 +55,7 @@ body {
     background: oklch(var(--b1) / 0.7);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid oklch(var(--bc) / 0.05);
+    border: 1px solid oklch(var(--bc) / 0.15);
     @apply shadow-md rounded-2xl transition-all duration-300;
 }
 
@@ -136,7 +136,7 @@ body {
     background: oklch(var(--b1) / 0.7);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid oklch(var(--bc) / 0.05);
+    border: 1px solid oklch(var(--bc) / 0.15);
     /* Equivalent to glass-effect */
     @apply border-none;
     /* DaisyUI card default override */
