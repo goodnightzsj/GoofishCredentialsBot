@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 
@@ -31,8 +31,27 @@ export class SystemSettingComponent implements OnInit {
         model: 'gpt-3.5-turbo',
         systemPrompt: ''
     });
+
+    // Store original settings for comparison
+    originalAISettings = signal<AISettings | null>(null);
+
     savingAI = signal(false);
     testingAI = signal(false);
+
+    // Compute if token has changed
+    isTokenChanged = computed(() => this.adminToken() !== (this.authService.token() || ''));
+
+    // Compute if AI settings have changed
+    isAIChanged = computed(() => {
+        const current = this.aiSettings();
+        const original = this.originalAISettings();
+        if (!original) return false;
+
+        return current.baseUrl !== original.baseUrl ||
+            current.apiKey !== original.apiKey ||
+            current.model !== original.model ||
+            current.systemPrompt !== original.systemPrompt;
+    });
 
     ngOnInit() {
         this.loadAISettings();
@@ -63,6 +82,7 @@ export class SystemSettingComponent implements OnInit {
         try {
             const settings = await this.settingsService.getAISettings();
             this.aiSettings.set(settings);
+            this.originalAISettings.set(JSON.parse(JSON.stringify(settings))); // Deep copy
         } catch (e) {
             console.error('加载 AI 设置失败', e);
         }
@@ -83,6 +103,8 @@ export class SystemSettingComponent implements OnInit {
                 systemPrompt: settings.systemPrompt
             });
             await this.dialog.alert('保存成功', 'AI 设置已保存');
+            // Update original settings to match current saved state
+            this.originalAISettings.set(JSON.parse(JSON.stringify(this.aiSettings())));
             await this.loadAISettings();
         } catch (e) {
             console.error('保存 AI 设置失败', e);

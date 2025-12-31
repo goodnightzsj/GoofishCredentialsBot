@@ -68,12 +68,39 @@ body {
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    cursor: default;
     background-color: var(--color-base-100);
     color: var(--color-base-content);
     background-image:
         radial-gradient(circle at 10% 20%, color-mix(in oklch, var(--color-primary) 5%, transparent) 0%, transparent 40%),
         radial-gradient(circle at 90% 80%, color-mix(in oklch, var(--color-secondary) 5%, transparent) 0%, transparent 40%);
     background-attachment: fixed;
+}
+
+/* Disabled buttons: keep cursor stable (avoid click-through) */
+.btn:disabled,
+.btn[disabled] {
+    cursor: not-allowed;
+    pointer-events: auto;
+}
+
+/* Prevent hover/active animations on disabled buttons */
+.btn:disabled:hover,
+.btn[disabled]:hover,
+.btn:disabled:active,
+.btn[disabled]:active {
+    transform: none;
+}
+
+.btn-primary:disabled:hover,
+.btn-primary[disabled]:hover {
+    box-shadow: none;
+    transform: none;
+}
+
+.btn-primary:disabled::before,
+.btn-primary[disabled]::before {
+    content: none;
 }
 
 /* ========================================

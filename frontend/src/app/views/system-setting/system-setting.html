@@ -30,7 +30,7 @@
             </div>
 
             <div class="flex gap-2 mt-4">
-                <button class="btn btn-primary btn-sm" [disabled]="savingToken()" (click)="saveAdminToken()">
+                <button class="btn btn-primary btn-sm" [disabled]="!isTokenChanged() || savingToken()" (click)="saveAdminToken()">
                     @if (savingToken()) {
                     <span class="loading loading-spinner loading-xs"></span>
                     }
@@ -104,7 +104,7 @@
             </div>
 
             <div class="flex gap-2 mt-4">
-                <button class="btn btn-primary btn-sm" [disabled]="savingAI()" (click)="saveAISettings()">
+                <button class="btn btn-primary btn-sm" [disabled]="!isAIChanged() || savingAI()" (click)="saveAISettings()">
                     @if (savingAI()) {
                     <span class="loading loading-spinner loading-xs"></span>
                     } @else {
