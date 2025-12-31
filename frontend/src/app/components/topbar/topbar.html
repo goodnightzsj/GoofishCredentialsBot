@@ -3,27 +3,32 @@
         <h1 class="topbar-title">{{ title() }}</h1>
         <div class="topbar-status">
             <!-- Theme Switcher -->
-            <div class="dropdown dropdown-end">
-                <div tabindex="0" role="button" class="btn btn-ghost btn-sm btn-circle">
-                    @switch (themeService.themeMode()) {
-                    @case ('light') { <lucide-icon [img]="icons.Sun" class="w-5 h-5"></lucide-icon> }
-                    @case ('dark') { <lucide-icon [img]="icons.Moon" class="w-5 h-5"></lucide-icon> }
-                    @default { <lucide-icon [img]="icons.Monitor" class="w-5 h-5"></lucide-icon> }
-                    }
+            <!-- Theme Switcher -->
+            <button class="theme-toggle-btn" (click)="toggleTheme()" [title]="'当前主题: ' + (themeService.themeMode())">
+                <!-- Sun Icon (Light) -->
+                <div class="theme-icon" 
+                     [class.active]="themeService.themeMode() === 'light'"
+                     [class.slide-out-top]="themeService.themeMode() === 'dark'"
+                     [class.slide-out-bottom]="themeService.themeMode() === 'system'">
+                    <lucide-icon [img]="icons.Sun" class="w-5 h-5 text-warning"></lucide-icon>
                 </div>
-                <ul tabindex="0"
-                    class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-32 border border-base-200 mt-2">
-                    <li><a (click)="setTheme('light')" [class.active]="themeService.themeMode() === 'light'">
-                            <lucide-icon [img]="icons.Sun" class="w-4 h-4"></lucide-icon> 浅色
-                        </a></li>
-                    <li><a (click)="setTheme('dark')" [class.active]="themeService.themeMode() === 'dark'">
-                            <lucide-icon [img]="icons.Moon" class="w-4 h-4"></lucide-icon> 深色
-                        </a></li>
-                    <li><a (click)="setTheme('system')" [class.active]="themeService.themeMode() === 'system'">
-                            <lucide-icon [img]="icons.Monitor" class="w-4 h-4"></lucide-icon> 跟随系统
-                        </a></li>
-                </ul>
-            </div>
+                
+                <!-- Moon Icon (Dark) -->
+                <div class="theme-icon" 
+                     [class.active]="themeService.themeMode() === 'dark'"
+                     [class.slide-out-top]="themeService.themeMode() === 'system'"
+                     [class.slide-out-bottom]="themeService.themeMode() === 'light'">
+                    <lucide-icon [img]="icons.Moon" class="w-5 h-5 text-primary"></lucide-icon>
+                </div>
+
+                <!-- Monitor Icon (System) -->
+                <div class="theme-icon" 
+                     [class.active]="themeService.themeMode() === 'system'"
+                     [class.slide-out-top]="themeService.themeMode() === 'light'"
+                     [class.slide-out-bottom]="themeService.themeMode() === 'dark'">
+                    <lucide-icon [img]="icons.Monitor" class="w-5 h-5"></lucide-icon>
+                </div>
+            </button>
 
             <div class="status-item">
                 <lucide-icon [img]="icons.Wifi" class="status-icon text-success"></lucide-icon>

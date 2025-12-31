@@ -21,7 +21,15 @@ export class TopbarComponent {
     activeCount = input<number>(0);
     messageCount = input<number>(0);
 
-    setTheme(mode: ThemeMode) {
-        this.themeService.setTheme(mode);
+    toggleTheme() {
+        const current = this.themeService.themeMode();
+        let next: ThemeMode = 'light';
+
+        // Cycle: system -> light -> dark -> system
+        if (current === 'system') next = 'light';
+        else if (current === 'light') next = 'dark';
+        else next = 'system';
+
+        this.themeService.setTheme(next);
     }
 }

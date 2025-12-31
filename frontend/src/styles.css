@@ -451,3 +451,46 @@ body {
     border-color: var(--color-primary);
     box-shadow: 0 0 10px color-mix(in oklch, var(--color-primary) 30%, transparent);
 }
+
+/* Theme Toggle Button Animation */
+.theme-toggle-btn {
+    @apply relative overflow-hidden rounded-full w-9 h-9 flex items-center justify-center btn btn-ghost btn-sm btn-circle;
+    border: 1px solid var(--fallback-b2, oklch(var(--b2)/var(--tw-border-opacity)));
+}
+
+.theme-toggle-btn .theme-icon {
+    @apply absolute w-5 h-5 transition-all duration-500;
+    transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Active State: Centered */
+.theme-toggle-btn .theme-icon.active {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+}
+
+/* Inactive State: Push out */
+.theme-toggle-btn .theme-icon:not(.active) {
+    opacity: 0;
+}
+
+/* Slide direction logic needs to be handled via specific classes or just simple toggle */
+/* Let's try a simpler approach where we just have "active" and "inactive" but with different transforms */
+/* Actually, to get the slide IN and slide OUT effect, we ideally need 3 states or just use the fact that they are cycling */
+
+/* Approach B: Simpler Rotation/Scale based on reference description "Slide and Rotate" */
+.theme-toggle-btn .theme-icon.slide-out-top {
+    transform: translateY(-150%) rotate(-90deg);
+}
+
+.theme-toggle-btn .theme-icon.slide-out-bottom {
+    transform: translateY(150%) rotate(90deg);
+}
+
+.theme-toggle-btn .theme-icon.slide-in-top {
+    transform: translateY(-150%) rotate(-90deg);
+}
+
+.theme-toggle-btn .theme-icon.slide-in-bottom {
+    transform: translateY(150%) rotate(90deg);
+}
